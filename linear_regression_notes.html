@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Linear Regression Notes</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$']]}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fb;color:#222}
+nav{position:fixed;left:0;top:0;width:250px;height:100vh;background:#183153;color:#fff;padding:20px;overflow:auto}
+nav a{display:block;color:#fff;text-decoration:none;padding:6px 0}
+main{margin-left:270px;padding:30px;max-width:980px}
+section{background:#fff;margin:24px 0;padding:28px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h1,h2{color:#183153}
+.math{text-align:center;font-size:1.2em;margin:18px 0}
+.note{background:#eef6ff;border-left:5px solid #2d6cdf;padding:12px}
+svg{max-width:100%}
+</style>
+</head>
+<body>
+<nav>
+<h2>Contents</h2>
+<a href="#s1">1. Supervised Learning</a>
+<a href="#s2">2. MSE</a>
+<a href="#s3">3. Loss Function</a>
+<a href="#s4">4. Optimization</a>
+<a href="#s5">5. Gradient Descent</a>
+<a href="#s6">6. Complexity</a>
+<a href="#s7">7. GD Update</a>
+<a href="#s8">8. SGD</a>
+<a href="#s9">9. Probabilistic View</a>
+<a href="#s10">10. Existence Theorem</a>
+<a href="#s11">11. Cross Validation</a>
+<a href="#s12">12. Ridge</a>
+<a href="#s13">13. Why Ridge</a>
+<a href="#s14">14. Lasso</a>
+<a href="#s15">15. Why Lasso</a>
+</nav>
+<main>
+<h1>Linear Regression – Complete Lecture Notes</h1>
+<p>This page follows the uploaded PPT flow, preserving explanations and formulas.</p>
+
+<section id="s1"><h2>1. Supervised Learning</h2>
+<p>Training data consists of <em>N</em> examples.</p>
+<div class="math">$$D=\{(x_1,y_1),(x_2,y_2),...,(x_N,y_N)\}$$</div>
+<ul><li>$x_i$ is the feature vector.</li><li>$y_i$ is the target label.</li><li>Objective: Learn $f:X\rightarrow Y$ so that predictions are as close as possible to the true values.</li></ul>
+<div class="note">Types: Binary classification, Multiclass classification, and Regression (continuous values).</div>
+</section>
+
+<section id="s2"><h2>2. Measuring Prediction Quality</h2>
+<p>Regression uses Mean Squared Error (MSE). The objective is to minimize prediction error.</p>
+<div class="math">$$L_{MSE}=(f(x)-y)^2$$</div>
+</section>
+
+<section id="s3"><h2>3. Linear Regression Loss Function</h2>
+<p>Prediction:</p><div class="math">$$\hat y=x^Tw$$</div>
+<div class="math">$$L(w)=\sum_{i=1}^{N}(x_i^Tw-y_i)^2$$</div>
+<p>The loss is quadratic in the parameters.</p>
+<div class="math">$$L(w)=w^TX^TXw-2y^TXw+y^Ty$$</div>
+</section>
+
+<section id="s4"><h2>4. Unconstrained Quadratic Optimization</h2>
+<p>Minimize the loss by setting the gradient to zero.</p>
+<div class="math">$$\nabla L(w)=2X^T(Xw-y)=0$$</div>
+<div class="math">$$X^TXw=X^Ty$$</div>
+<p>Closed-form solution:</p>
+<div class="math">$$w^*=(X^TX)^{-1}X^Ty$$</div>
+<p>If $X^TX$ is not invertible, use the Moore–Penrose pseudo-inverse.</p>
+<div class="math">$$w^*=X^+y$$</div>
+</section>
+
+<section id="s5"><h2>5. Gradient Descent</h2>
+<p>Gradient descent iteratively minimizes the loss.</p>
+<ol><li>Initialize weights.</li><li>Compute gradient.</li><li>Update parameters.</li><li>Repeat until convergence.</li></ol>
+<div class="math">$$w^{t+1}=w^t-\eta\nabla L(w^t)$$</div>
+<svg viewBox="0 0 500 140"><path d="M20 120 C120 10 220 10 320 90 S460 120 480 20" fill="none" stroke="#2d6cdf" stroke-width="3"/><circle cx="370" cy="75" r="5"/><text x="380" y="70">Gradient Descent</text></svg>
+</section>
+
+<section id="s6"><h2>6. Analytical Solution & Complexity</h2>
+<p>Exact inverse computation has complexity:</p>
+<div class="math">$$O(d^3)$$</div>
+<p>For high-dimensional data, Gradient Descent is often preferred.</p>
+</section>
+
+<section id="s7"><h2>7. Gradient Descent Update for Linear Regression</h2>
+<div class="math">$$w^{t+1}=w^t-\eta[(X^TX)w^t-X^Ty]$$</div>
+<ul><li>$\eta$ – learning rate</li><li>$X$ – data matrix</li><li>$y$ – target vector</li></ul>
+</section>
+
+<section id="s8"><h2>8. Stochastic Gradient Descent</h2>
+<ul><li>Uses one sample (or mini-batch) per update.</li><li>Scales well to large datasets.</li><li>Supports online learning.</li><li>Noise can help escape shallow minima.</li><li>Often converges faster in practice.</li></ul>
+</section>
+
+<section id="s9"><h2>9. Probabilistic View</h2>
+<div class="math">$$y=wx+b+\epsilon,\qquad \epsilon\sim\mathcal N(0,\sigma^2)$$</div>
+<div class="math">$$y\sim\mathcal N(wx+b,\sigma^2)$$</div>
+<p>This models uncertainty, justifies squared loss using Gaussian noise, and connects regression to Maximum Likelihood Estimation.</p>
+</section>
+
+<section id="s10"><h2>10. Existence Theorem</h2>
+<p>An existence theorem guarantees that an optimal solution exists under suitable assumptions.</p>
+<div class="math">$$MSE(w)=\frac1N\sum(y_i-x_i^Tw)^2+\lambda\|w\|^2$$</div>
+</section>
+
+<section id="s11"><h2>11. Cross Validation</h2>
+<p>Split the dataset into <em>k</em> folds. Train using <em>k−1</em> folds and evaluate on the remaining fold.</p>
+<div class="math">$$MSE=\frac1n\sum(y_i-\hat y_i)^2$$</div>
+</section>
+
+<section id="s12"><h2>12. Ridge Regression</h2>
+<p>Adds L2 regularization to reduce overfitting.</p>
+<div class="math">$$L_{ridge}(w)=\sum(y_i-x_i^Tw)^2+\lambda\sum w_j^2$$</div>
+<div class="math">$$\hat w=\arg\min_w\left(\|y-Xw\|^2+\lambda\|w\|^2\right)$$</div>
+</section>
+
+<section id="s13"><h2>13. Why Ridge Regression?</h2>
+<ul><li>Prevents overfitting.</li><li>Handles multicollinearity.</li><li>Controls bias–variance tradeoff.</li></ul>
+</section>
+
+<section id="s14"><h2>14. Lasso Regression</h2>
+<p>Lasso uses L1 regularization.</p>
+<div class="math">$$L_{lasso}=\sum(y_i-\beta_0-\sum\beta_jx_{ij})^2+\lambda\sum|\beta_j|$$</div>
+</section>
+
+<section id="s15"><h2>15. Why Lasso Regression?</h2>
+<ul><li>Automatic feature selection.</li><li>Produces sparse models.</li><li>Prevents overfitting.</li><li>Improves interpretability.</li></ul>
+</section>
+
+</main>
+</body></html>
